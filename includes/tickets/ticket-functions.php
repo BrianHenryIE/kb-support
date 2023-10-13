@@ -527,12 +527,18 @@ function kbs_get_ticket_status_colour( $status, $default = false )	{
  * @return	arr
  */
 function kbs_get_ticket_statuses( $can_select = true )	{
-	$ticket_statuses = kbs_get_post_statuses( 'labels', $can_select );
 	$statuses        = array();
-    $defaults        = kbs_get_default_ticket_statuses();
 
+	$ticket_statuses = kbs_get_post_statuses( 'labels', $can_select );  
 	foreach ( $ticket_statuses as $ticket_status ) {
 		$statuses[ $ticket_status->name ] = esc_html( $ticket_status->label );
+	}
+
+	$defaults = kbs_get_default_ticket_statuses();
+	foreach ( $defaults as $default_ticket_status ) {
+		if ( ! isset( $statuses[ $default_ticket_status ] ) ) {
+			$statuses[ $default_ticket_status ] = ucfirst( $default_ticket_status );
+		}
 	}
 
 	$statuses = apply_filters( 'kbs_ticket_statuses', $statuses );
